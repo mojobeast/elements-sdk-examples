@@ -205,8 +205,27 @@ window.widget.serviceModules.registerServiceModuleProvider({
       let str = "";
       // Update subathon end timestamp
       switch (activity.type) {
+        case 'communityGiftPurchase':
+          switch (activity.data.tier) {
+            case "1000":
+              str = managedData.timeAdditions.t1[1];
+              if (isInt(str) && managedData.timeAdditions.t1[0]) addTime(parseInt(str, 10) * activity.data.amount);
+              break;
+            case "2000":
+              str = managedData.timeAdditions.t2[1];
+              if (isInt(str) && managedData.timeAdditions.t2[0]) addTime(parseInt(str, 10) * activity.data.amount);
+              break;
+            case "3000":
+              str = managedData.timeAdditions.t3[1];
+              if (isInt(str) && managedData.timeAdditions.t3[0]) addTime(parseInt(str, 10) * activity.data.amount);
+              break;
+          }
+          break;
         case 'subscriber':
           if (activity.bulkGifted) { // Ignore gifting event and count only real subs
+            return;
+          }
+          if (activity.activityGroup) { // Ignore community gifted subs because we used the communityGiftPurchase Activity to add time for these
             return;
           }
           switch (activity.data.tier) {
